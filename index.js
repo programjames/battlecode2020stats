@@ -8,6 +8,7 @@ function updateData(response) {
 		scores = response["scores"];
 		mus = response["mus"];
 		ranks = response["mus"];
+		sigmas = response["sigmas"];
 		strat = response["strat"];
 		updateGraphs()
 	}
@@ -38,28 +39,34 @@ function updateGraphs(){
 });
 
 function drawBackgroundColor() {
+	let avgRank = ranks.reduce((a,b) => a + b, 0) / ranks.length;
+	let avgScore = scores.reduce((a,b) => a + b, 0) / scores.length;
+	let avgMu = mus.reduce((a,b) => a + b, 0) / mus.length;
+	let avgSigma = sigmas.reduce((a,b) => a + b, 0) / sigmas.length;
 	let c = [];
 	for(let i=0; i<scores.length; i++) {
-		c.push([i, scores[i]]);
+		c.push([i, ranks[i], scores[i]*avgRank/avgScore, mus[i]*avgRank/avgMu, sigmas[i]*avgRank/avgSigma]);
 	}
 
   var data = new google.visualization.DataTable();
-  data.addColumn('number', '#');
+  data.addColumn('number', 'Checkins');
+  data.addColumn('number', 'Rank');
   data.addColumn('number', 'Score');
+  data.addColumn('number', 'Mu');
+  data.addColumn('number', 'Sigma');
 
   data.addRows(c);
 
   var options = {
     hAxis: {
-      title: 'Time'
+      title: 'Checkins'
     },
     vAxis: {
-      title: 'Score'
+      title: 'Rank'
     },
-    backgroundColor: '#f1f8e9'
+    backgroundColor: '#ffffff'
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('scoreGraph'));
+  var chart = new google.visualization.LineChart(document.getElementById('overallGraph'));
   chart.draw(data, options);
-}
-}
+}
