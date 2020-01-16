@@ -7,7 +7,7 @@ function updateData(response) {
 	if(response != null) {
 		scores = response["scores"];
 		mus = response["mus"];
-		ranks = response["mus"];
+		ranks = response["ranks"];
 		sigmas = response["sigmas"];
 		strat = response["strat"];
 		updateGraphs()
@@ -45,7 +45,7 @@ function drawBackgroundColor() {
 	let avgSigma = sigmas.reduce((a,b) => a + b, 0) / sigmas.length;
 	let c = [];
 	for(let i=0; i<scores.length; i++) {
-		c.push([i, ranks[i], scores[i]*avgRank/avgScore, mus[i]*avgRank/avgMu, sigmas[i]*avgRank/avgSigma]);
+		c.push([i, ranks[i], scores[i]*avgRank/avgScore, mus[i]*avgRank/avgMu]);//, sigmas[i]*avgRank/avgSigma]);
 	}
 
   var data = new google.visualization.DataTable();
@@ -53,7 +53,7 @@ function drawBackgroundColor() {
   data.addColumn('number', 'Rank');
   data.addColumn('number', 'Score');
   data.addColumn('number', 'Mu');
-  data.addColumn('number', 'Sigma');
+  //data.addColumn('number', 'Sigma');
 
   data.addRows(c);
 
@@ -64,9 +64,12 @@ function drawBackgroundColor() {
     vAxis: {
       title: 'Rank'
     },
+	width:window.innerWidth,
+	height: window.innerWidth/2,
     backgroundColor: '#ffffff'
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('overallGraph'));
   chart.draw(data, options);
-}
+}
+}
